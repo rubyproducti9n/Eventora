@@ -1,0 +1,97 @@
+import { EventDetails } from "@/types/event";
+
+export const SAMPLE_EVENTS: EventDetails[] = [
+  {
+    id: "sample-1",
+    title: "Sophia & Liam's Garden Wedding",
+    eventType: "wedding",
+    date: "2026-12-14",
+    location: "Botanical Pavilion, Austin, TX",
+    guestCount: 120,
+    targetBudget: 28000,
+    status: "planning",
+    createdAt: "2026-10-15T10:00:00.000Z",
+    updatedAt: "2026-10-20T14:30:00.000Z",
+    notes: "Outdoor ceremony with string quartet and farm-to-table banquet.",
+    plan: {
+      theme: "Elegance in Flora & Autumn Warmth",
+      summary: "Romantic outdoor celebration focusing on sustainable dining and ambient acoustic music.",
+      recommendations: [
+        "Secure tent deposit for potential inclement weather",
+        "Coordinate shuttle bus for parking venue",
+        "Confirm dietary restrictions for 14 vegan guests",
+      ],
+      budgetBreakdown: [
+        { id: "b1", category: "Venue & Rentals", description: "Garden pavilion + chairs", allocatedAmount: 8500, actualAmount: 8500, isPaid: true },
+        { id: "b2", category: "Catering & Bar", description: "Farm-to-table dinner + open bar", allocatedAmount: 11000, actualAmount: 10500, isPaid: false },
+        { id: "b3", category: "Photography & Video", description: "8hr coverage with second shooter", allocatedAmount: 3800, actualAmount: 3800, isPaid: true },
+        { id: "b4", category: "Florals & Decor", description: "Arbor installation and table runners", allocatedAmount: 3200, actualAmount: 3000, isPaid: false },
+        { id: "b5", category: "Music & Entertainment", description: "String quartet & evening DJ", allocatedAmount: 1500, actualAmount: 1500, isPaid: true },
+      ],
+      timeline: [
+        { id: "t1", timeframe: "8 Weeks Before", title: "Finalize Floral Arrangements", description: "Review sample table mockups", isCompleted: true, category: "planning" },
+        { id: "t2", timeframe: "6 Weeks Before", title: "Send Formal Invitations", description: "Track digital RSVPs and dietary requests", isCompleted: true, category: "planning" },
+        { id: "t3", timeframe: "3 Weeks Before", title: "Catering Menu Tasting & Final Headcount", description: "Confirm final plate counts with chef", isCompleted: false, category: "preparation" },
+        { id: "t4", timeframe: "1 Week Before", title: "Rehearsal Walkthrough & Sound Check", description: "Run through processional timing with wedding party", isCompleted: false, category: "preparation" },
+        { id: "t5", timeframe: "Day Of - 11:00 AM", title: "Bridal Suite Setup & Photography", description: "Detail shots of dresses, rings, and florals", isCompleted: false, category: "day_of" },
+      ],
+      vendorChecklist: [
+        { id: "v1", role: "Caterer", status: "booked", estimatedCost: 11000, contactName: "Artisan Kitchens" },
+        { id: "v2", role: "Photographer", status: "confirmed", estimatedCost: 3800, contactName: "Golden Hour Studios" },
+        { id: "v3", role: "Florist", status: "booked", estimatedCost: 3200, contactName: "Petal & Stem" },
+        { id: "v4", role: "Acoustic String Quartet", status: "confirmed", estimatedCost: 800, contactName: "Austin Strings" },
+        { id: "v5", role: "Evening DJ", status: "contacted", estimatedCost: 700, contactName: "Groove Beats" },
+      ],
+      suggestedSchedule: [
+        { time: "02:00 PM", activity: "Vendor Arrival & Floral Installations" },
+        { time: "04:30 PM", activity: "Guest Welcome & Prelude Music" },
+        { time: "05:00 PM", activity: "Ceremony Begins" },
+        { time: "06:00 PM", activity: "Cocktail Hour & Lawn Games" },
+        { time: "07:15 PM", activity: "Dinner & Toasts" },
+        { time: "09:00 PM", activity: "Dancing & Cake Cutting" },
+      ],
+    },
+  },
+  {
+    id: "sample-2",
+    title: "Leo's 10th Birthday Space Adventure",
+    eventType: "birthday",
+    date: "2026-11-28",
+    location: "Community Center Hall, Seattle, WA",
+    guestCount: 35,
+    targetBudget: 1500,
+    status: "planning",
+    createdAt: "2026-10-18T12:00:00.000Z",
+    updatedAt: "2026-10-21T09:15:00.000Z",
+    notes: "Intergalactic theme with planetarium projector, DIY rocket craft station, and custom galaxy cupcakes.",
+    plan: {
+      theme: "Galactic Voyage & Astronaut Training",
+      summary: "High-energy space party with interactive science games and rocket building.",
+      recommendations: [
+        "Order cosmic glow sticks and astronaut helmet favors 2 weeks in advance",
+        "Set up projector in dim section of community hall",
+      ],
+      budgetBreakdown: [
+        { id: "b21", category: "Venue Rental", description: "Community center hall 4 hours", allocatedAmount: 400, actualAmount: 400, isPaid: true },
+        { id: "b22", category: "Food & Drinks", description: "Pizza, juice boxes, galaxy cake", allocatedAmount: 500, actualAmount: 480, isPaid: false },
+        { id: "b23", category: "Decor & Favors", description: "Balloons, glow sticks, planet lanterns", allocatedAmount: 350, actualAmount: 320, isPaid: true },
+        { id: "b24", category: "Activities", description: "Stomp rocket kits & planetarium kit", allocatedAmount: 250, actualAmount: 220, isPaid: false },
+      ],
+      timeline: [
+        { id: "t21", timeframe: "3 Weeks Before", title: "Send Digital Space Invites", description: "Collect headcount for rocket crafts", isCompleted: true, category: "planning" },
+        { id: "t22", timeframe: "1 Week Before", title: "Purchase Craft Supplies & Balloons", description: "Buy paper rocket tubes, stickers, and favors", isCompleted: false, category: "preparation" },
+        { id: "t23", timeframe: "Day Of - 1:00 PM", title: "Hall Setup & Galaxy Projector Test", description: "Hang planet lanterns and arrange craft tables", isCompleted: false, category: "day_of" },
+      ],
+      vendorChecklist: [
+        { id: "v21", role: "Custom Bakery", status: "booked", estimatedCost: 150, contactName: "Cosmic Confections" },
+        { id: "v22", role: "Pizza Delivery", status: "contacted", estimatedCost: 250, contactName: "Luigi's Pizzeria" },
+      ],
+      suggestedSchedule: [
+        { time: "02:00 PM", activity: "Astronaut Check-in & Badge Making" },
+        { time: "02:30 PM", activity: "Stomp Rocket Construction & Launch" },
+        { time: "03:30 PM", activity: "Pizza & Cosmic Cupcakes" },
+        { time: "04:15 PM", activity: "Galaxy Trivia & Mission Debrief" },
+      ],
+    },
+  },
+];

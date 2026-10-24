@@ -1,0 +1,16 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        // Enforce that only the authenticated owner can read or write their events
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "events": {
+          "$eventId": {
+            ".validate": "newData.hasChildren(['id', 'title', 'eventType', 'date'])"
+          }
+        }
+      }
+    }
+  }
+}

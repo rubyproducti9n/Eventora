@@ -65,9 +65,10 @@ export function Header() {
 
           <button
             type="button"
-            className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-stone-600 hover:bg-stone-200/60 hover:text-stone-900"
+            className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-stone-600 hover:bg-stone-200/60 hover:text-stone-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
+            aria-label="Toggle navigation menu"
           >
             <span className="sr-only">Toggle navigation menu</span>
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

@@ -8,15 +8,22 @@ export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
 }
 
+const SUPPORTED_CURRENCY_CODES = new Set(["USD", "EUR", "GBP", "CAD", "AUD", "INR"]);
+
 /**
- * Formats a currency value.
+ * Formats a currency value safely with fallback for unknown currency codes.
  */
 export function formatCurrency(amount: number, currency: string = "USD"): string {
+  const safeAmount = typeof amount === "number" && !isNaN(amount) && isFinite(amount) ? amount : 0;
+  const normalizedCode = typeof currency === "string" && SUPPORTED_CURRENCY_CODES.has(currency.toUpperCase())
+    ? currency.toUpperCase()
+    : "USD";
+
   return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency,
+    currency: normalizedCode,
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(safeAmount);
 }
 
 /**

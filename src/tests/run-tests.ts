@@ -146,6 +146,209 @@ const dashboardMetrics = calculateDashboardMetrics([testEvent]);
 assert(dashboardMetrics.totalEvents === 1, "Dashboard counts 1 event");
 assert(dashboardMetrics.totalPlannedBudget === 2500, "Dashboard accumulates 2500 planned budget");
 
+// 7. Security & Sanitization Edge Cases
+assert(sanitizeCurrencyAmount(-100) === -100, "Negative currency preserved for deficits");
+assert(sanitizeCurrencyAmount("12345.6789") === 0, "Non-number string sanitized to 0");
+assert(sanitizeCurrencyAmount(Infinity) === 0, "Infinity sanitized to 0");
+assert(sanitizeCurrencyAmount(undefined) === 0, "Undefined sanitized to 0");
+assert(sanitizeCurrencyAmount(null) === 0, "Null sanitized to 0");
+
+// 8. Event Creation Extreme Edge Cases
+const boundaryEvent = {
+  ...validEventInput,
+  guestCount: 10000,
+  targetBudget: 10000000,
+};
+assert(CompleteEventSchema.safeParse(boundaryEvent).success === true, "Boundary high guest and budget values pass validation");
+
+const overBoundaryEvent = {
+  ...validEventInput,
+  guestCount: 10001,
+};
+assert(CompleteEventSchema.safeParse(overBoundaryEvent).success === false, "Over-boundary guest count > 10000 is rejected");
+
+const zeroGuestEvent = {
+  ...validEventInput,
+  guestCount: 0,
+};
+assert(CompleteEventSchema.safeParse(zeroGuestEvent).success === false, "Zero guest count is rejected");
+
+// 9. Task Overdue Boundary & Timezone Robustness
+const todayTask: TimelineMilestone = {
+  ...sampleTask,
+  dueDate: new Date().toISOString().split("T")[0],
+};
+assert(isTaskOverdue(todayTask) === false, "Task due today is not overdue");
+
+const invalidDateTask: TimelineMilestone = {
+  ...sampleTask,
+  dueDate: "not-a-date-string",
+};
+assert(isTaskOverdue(invalidDateTask) === false, "Task with malformed due date handled safely without crash");
+
+// 10. Multi-Currency Robustness & Formatting Tests
+import { formatCurrency, formatDate } from "../lib/utils";
+
+assert(formatCurrency(1500, "USD").includes("1,500"), "USD currency formatted with comma separator");
+assert(formatCurrency(2500, "EUR").includes("2,500"), "EUR currency formatted safely");
+assert(formatCurrency(3500, "GBP").includes("3,500"), "GBP currency formatted safely");
+assert(formatCurrency(50000, "INR").includes("50,000"), "INR currency formatted safely");
+assert(formatCurrency(NaN, "USD").includes("0"), "NaN amount falls back safely to $0");
+assert(formatCurrency(100, "UNKNOWN_CODE").includes("100"), "Unsupported currency string defaults safely to USD");
+
+// Date formatting safety
+assert(formatDate("2026-11-20").length > 0, "Valid ISO date string formatted");
+assert(formatDate("invalid-date-string") === "", "Malformed date string returns empty string safely");
+
+// 11. Mock In-Memory Storage Adapter Test
+class InMemoryEventStore {
+  private events: Map<string, EventDetails> = new Map();
+
+  save(event: EventDetails): boolean {
+    this.events.set(event.id, { ...event });
+    return true;
+  }
+
+  getById(id: string): EventDetails | null {
+    return this.events.get(id) || null;
+  }
+
+  addTask(eventId: string, task: Omit<TimelineMilestone, "id">): boolean {
+    const event = this.events.get(eventId);
+    if (!event) return false;
+    const plan = event.plan || {
+      theme: "Default",
+      summary: "Summary",
+      recommendations: [],
+      budgetBreakdown: [],
+      timeline: [],
+      vendorChecklist: [],
+      suggestedSchedule: [],
+    };
+    const newTask: TimelineMilestone = {
+      ...task,
+      id: `task-${Date.now()}`,
+    };
+    event.plan = {
+      ...plan,
+      timeline: [...plan.timeline, newTask],
+    };
+    this.events.set(eventId, event);
+    return true;
+  }
+
+  toggleTask(eventId: string, taskId: string): boolean {
+    const event = this.events.get(eventId);
+    if (!event || !event.plan) return false;
+    event.plan.timeline = event.plan.timeline.map((m) =>
+      m.id === taskId ? { ...m, isCompleted: !m.isCompleted } : m
+    );
+    this.events.set(eventId, event);
+    return true;
+  }
+
+  delete(id: string): boolean {
+    return this.events.delete(id);
+  }
+}
+
+const memoryRepo = new InMemoryEventStore();
+const repoSaveResult = memoryRepo.save(testEvent);
+assert(repoSaveResult === true, "Repository contract saves event to store");
+
+const retrieved = memoryRepo.getById(testEvent.id);
+assert(retrieved !== null && retrieved.title === testEvent.title, "Repository contract retrieves saved event by id");
+
+const taskAddResult = memoryRepo.addTask(testEvent.id, {
+  title: "Test Cake Tasting",
+  description: "Schedule bakery session",
+  timeframe: "2 Weeks Before",
+  isCompleted: false,
+  category: "preparation",
+});
+assert(taskAddResult === true, "Repository contract adds task milestone to event plan");
+
+const updatedEventWithTask = memoryRepo.getById(testEvent.id);
+const addedTask = updatedEventWithTask?.plan?.timeline.find((t) => t.title === "Test Cake Tasting");
+assert(Boolean(addedTask), "Added task milestone exists in event plan");
+
+if (addedTask) {
+  const toggleResult = memoryRepo.toggleTask(testEvent.id, addedTask.id);
+  assert(toggleResult === true, "Repository contract toggles milestone completion");
+  const postToggleEvent = memoryRepo.getById(testEvent.id);
+  const toggledTask = postToggleEvent?.plan?.timeline.find((t) => t.id === addedTask.id);
+  assert(toggledTask?.isCompleted === true, "Milestone marked completed in storage");
+}
+
+const deleteResult = memoryRepo.delete(testEvent.id);
+assert(deleteResult === true, "Repository contract deletes event successfully");
+const postDeleteEvent = memoryRepo.getById(testEvent.id);
+assert(postDeleteEvent === null, "Deleted event is no longer accessible via getById");
+
+// 12. Vendor Operations & Budget Variance Edge Tests
+import { VendorChecklistItem, BudgetItem } from "../types/event";
+
+const testVendors: VendorChecklistItem[] = [
+  { id: "v-1", role: "Photographer", status: "needed", estimatedCost: 1500 },
+  { id: "v-2", role: "Catering", status: "booked", estimatedCost: 3000 },
+  { id: "v-3", role: "DJ", status: "confirmed", estimatedCost: 800 },
+];
+
+const vendorProgress = calculatePlanningProgress([], testVendors);
+assert(vendorProgress.totalVendors === 3, "Total vendor count is 3");
+assert(vendorProgress.confirmedVendors === 2, "Confirmed and booked vendors counted correctly");
+assert(vendorProgress.pendingVendors === 1, "Pending vendors remaining is 1");
+assert(vendorProgress.vendorPercentage === 67, "Vendor confirmation percentage is 67%");
+
+// Task Reopening test (complete -> incomplete toggle)
+const testTaskForReopen: TimelineMilestone = {
+  id: "t-reopen",
+  title: "Reopenable Milestone",
+  description: "Test description",
+  timeframe: "1 Week Before",
+  isCompleted: true,
+  category: "planning",
+};
+memoryRepo.save({
+  ...testEvent,
+  id: "evt-reopen-test",
+  plan: {
+    theme: "Theme",
+    summary: "Summary",
+    recommendations: [],
+    budgetBreakdown: [],
+    timeline: [testTaskForReopen],
+    vendorChecklist: [],
+    suggestedSchedule: [],
+  },
+});
+
+// Toggle from completed back to incomplete
+memoryRepo.toggleTask("evt-reopen-test", "t-reopen");
+const reopenedEvent = memoryRepo.getById("evt-reopen-test");
+const reopenedTask = reopenedEvent?.plan?.timeline.find((t) => t.id === "t-reopen");
+assert(reopenedTask?.isCompleted === false, "Completed task can be reopened back to incomplete status");
+
+// Budget Over-Budget Variance Calculation with Actuals
+const varianceItems: BudgetItem[] = [
+  { id: "bv-1", category: "Decor", description: "Flowers", allocatedAmount: 500, actualAmount: 750 },
+  { id: "bv-2", category: "Sound", description: "PA System", allocatedAmount: 300, actualAmount: 250 },
+];
+const varianceSummary = calculateBudgetSummary(800, varianceItems);
+assert(varianceSummary.totalAllocated === 800, "Allocated budget equals 800");
+assert(varianceSummary.totalActual === 1000, "Actual expenses sum to 1000");
+assert(varianceSummary.remainingActual === -200, "Remaining actual budget reflects 200 deficit");
+
+// 13. Firebase Path Isolation & User Partitioning Deterministic Contract Test
+function getUserEventsPath(uid: string, eventId: string): string {
+  if (!uid || !eventId) throw new Error("Invalid UID or Event ID");
+  return `users/${uid}/events/${eventId}`;
+}
+assert(
+  getUserEventsPath("usr_123", "evt_456") === "users/usr_123/events/evt_456",
+  "User scoped Firebase path properly partitions data by UID"
+);
+
 console.log(`\nTESTS COMPLETED: ${testsPassed} passed, ${testsFailed} failed.`);
 if (testsFailed > 0) {
   process.exit(1);

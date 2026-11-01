@@ -8,3 +8,4 @@ export * from "./progress";
 export * from "./modal";
 export * from "./empty-state";
 export * from "./alert";
+export * from "./skip-link";

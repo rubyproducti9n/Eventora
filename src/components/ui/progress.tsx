@@ -7,7 +7,7 @@ export interface ProgressProps extends React.HTMLAttributes<HTMLDivElement> {
   colorClass?: string;
 }
 
-export function Progress({ className, value = 0, max = 100, colorClass = "bg-indigo-600", ...props }: ProgressProps) {
+export function Progress({ className, value = 0, max = 100, colorClass = "bg-stone-800", ...props }: ProgressProps) {
   const percentage = Math.min(Math.max(0, (value / max) * 100), 100);
 
   return (
@@ -16,11 +16,11 @@ export function Progress({ className, value = 0, max = 100, colorClass = "bg-ind
       aria-valuemin={0}
       aria-valuemax={max}
       aria-valuenow={value}
-      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-slate-100", className)}
+      className={cn("relative h-1.5 w-full overflow-hidden rounded-full bg-stone-200/60", className)}
       {...props}
     >
       <div
-        className={cn("h-full transition-all duration-300 ease-in-out", colorClass)}
+        className={cn("h-full", colorClass)}
         style={{ width: `${percentage}%` }}
       />
     </div>

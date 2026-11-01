@@ -218,53 +218,53 @@ export function EventDetailContent() {
       )}
 
       {/* View Switcher Tabs */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex flex-wrap items-center gap-1 border-b border-stone-200 pb-2">
         <button
           type="button"
           onClick={() => setActiveTab("overview")}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors ${
+          className={`px-3 py-1.5 text-xs font-medium rounded-md ${
             activeTab === "overview"
-              ? "bg-indigo-50 text-indigo-700"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-stone-200/80 text-stone-900"
+              : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
           }`}
         >
-          Plan Overview
+          Plan overview
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("timeline")}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 text-xs font-medium rounded-md flex items-center gap-1.5 ${
             activeTab === "timeline"
-              ? "bg-indigo-50 text-indigo-700"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-stone-200/80 text-stone-900"
+              : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
           }`}
         >
-          <Clock className="h-4 w-4" />
-          Timeline & Milestones
+          <Clock className="h-3.5 w-3.5" />
+          Timeline and milestones
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("budget")}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 text-xs font-medium rounded-md flex items-center gap-1.5 ${
             activeTab === "budget"
-              ? "bg-indigo-50 text-indigo-700"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-stone-200/80 text-stone-900"
+              : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
           }`}
         >
-          <DollarSign className="h-4 w-4" />
-          Budget Manager
+          <DollarSign className="h-3.5 w-3.5" />
+          Budget manager
         </button>
         <button
           type="button"
           onClick={() => setActiveTab("vendors")}
-          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-colors flex items-center gap-1.5 ${
+          className={`px-3 py-1.5 text-xs font-medium rounded-md flex items-center gap-1.5 ${
             activeTab === "vendors"
-              ? "bg-indigo-50 text-indigo-700"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              ? "bg-stone-200/80 text-stone-900"
+              : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
           }`}
         >
-          <Building className="h-4 w-4" />
-          Vendor Checklist
+          <Building className="h-3.5 w-3.5" />
+          Vendor checklist
         </button>
       </div>
 

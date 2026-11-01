@@ -14,7 +14,7 @@ export async function initAnalytics(): Promise<Analytics | null> {
 
   isInitAttempted = true;
   try {
-    const supported = await isSupported();
+    const supported = await isSupported().catch(() => false);
     if (supported) {
       const app = getFirebaseApp();
       if (app) {
@@ -22,7 +22,8 @@ export async function initAnalytics(): Promise<Analytics | null> {
       }
     }
   } catch (err) {
-    console.warn("[Eventora Analytics] Not supported or initialization failed:", err);
+    // Gracefully catch invalid API key or offline errors without throwing in console
+    console.warn("[Eventora Analytics] Analytics initialization skipped:", (err as Error)?.message || err);
   }
   return analyticsInstance;
 }

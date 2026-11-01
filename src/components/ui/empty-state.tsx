@@ -11,7 +11,7 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  icon = <Sparkles className="h-10 w-10 text-indigo-400" />,
+  icon = <Sparkles className="h-6 w-6 text-stone-400" />,
   title,
   description,
   action,
@@ -20,16 +20,16 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center text-center p-8 sm:p-12 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50",
+        "flex flex-col items-center justify-center text-center p-8 sm:p-12 border border-dashed border-stone-300 rounded-md bg-stone-50/60",
         className
       )}
     >
-      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-xs border border-slate-100 mb-4">
+      <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white border border-stone-200 mb-3">
         {icon}
       </div>
-      <h3 className="text-base font-semibold text-slate-800">{title}</h3>
-      <p className="mt-1.5 text-sm text-slate-500 max-w-sm">{description}</p>
-      {action && <div className="mt-6">{action}</div>}
+      <h3 className="text-sm font-semibold text-stone-900">{title}</h3>
+      <p className="mt-1 text-xs text-stone-500 max-w-sm">{description}</p>
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }

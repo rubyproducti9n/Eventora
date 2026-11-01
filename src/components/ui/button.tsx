@@ -10,22 +10,22 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading = false, disabled, children, ...props }, ref) => {
     const baseStyles =
-      "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none cursor-pointer";
+      "inline-flex items-center justify-center font-medium rounded-md select-none cursor-pointer disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
 
     const variantStyles = {
-      primary: "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 focus-visible:ring-indigo-600 shadow-sm",
-      secondary: "bg-slate-100 text-slate-800 hover:bg-slate-200 active:bg-slate-300 focus-visible:ring-slate-400",
-      outline: "border border-slate-300 bg-transparent text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-400",
-      ghost: "bg-transparent text-slate-700 hover:bg-slate-100 focus-visible:ring-slate-400",
-      destructive: "bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 focus-visible:ring-rose-600 shadow-sm",
-      accent: "bg-rose-500 text-white hover:bg-rose-600 active:bg-rose-700 focus-visible:ring-rose-500 shadow-sm",
+      primary: "bg-slate-900 text-white hover:bg-slate-800 active:bg-slate-950 focus-visible:ring-slate-900 border border-slate-900/10 shadow-xs",
+      secondary: "bg-stone-100 text-stone-900 hover:bg-stone-200 active:bg-stone-300 focus-visible:ring-stone-400 border border-stone-200/60",
+      outline: "border border-stone-300 bg-transparent text-stone-800 hover:bg-stone-100 focus-visible:ring-stone-400",
+      ghost: "bg-transparent text-stone-700 hover:bg-stone-100 focus-visible:ring-stone-400",
+      destructive: "bg-rose-700 text-white hover:bg-rose-800 active:bg-rose-900 focus-visible:ring-rose-700 shadow-xs",
+      accent: "bg-orange-700 text-white hover:bg-orange-800 active:bg-orange-900 focus-visible:ring-orange-700 shadow-xs",
     };
 
     const sizeStyles = {
       sm: "h-8 px-3 text-xs gap-1.5",
-      md: "h-10 px-4 py-2 text-sm gap-2",
-      lg: "h-12 px-6 text-base gap-2.5",
-      icon: "h-10 w-10 p-0",
+      md: "h-9 px-4 text-sm gap-2",
+      lg: "h-11 px-6 text-base gap-2.5",
+      icon: "h-9 w-9 p-0",
     };
 
     return (
@@ -56,4 +56,5 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
+
 Button.displayName = "Button";

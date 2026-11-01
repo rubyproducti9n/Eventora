@@ -14,10 +14,24 @@ const firebaseConfig = {
 };
 
 /**
+ * Returns true if a valid Firebase API key is configured.
+ */
+export function isFirebaseConfigured(): boolean {
+  return (
+    typeof window !== "undefined" &&
+    Boolean(firebaseConfig.apiKey) &&
+    !firebaseConfig.apiKey.includes("AIzaSyCFZEcNnmf7FL1Oj") // detect dummy/unprovisioned keys
+  );
+}
+
+/**
  * Initializes and returns a singleton Firebase App instance (safe across hot-reloads and SSR).
  */
 export function getFirebaseApp(): FirebaseApp | null {
   if (typeof window === "undefined") {
+    return null;
+  }
+  if (!isFirebaseConfigured()) {
     return null;
   }
   return !getApps().length ? initializeApp(firebaseConfig) : getApp();

@@ -11,9 +11,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="w-full space-y-1.5">
+      <div className="w-full space-y-1">
         {label && (
-          <label htmlFor={inputId} className="block text-sm font-medium text-slate-700">
+          <label htmlFor={inputId} className="block text-xs font-medium text-stone-700">
             {label}
           </label>
         )}
@@ -22,14 +22,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           type={type}
           ref={ref}
           className={cn(
-            "flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
-            error && "border-rose-500 focus-visible:ring-rose-500",
+            "flex h-9 w-full rounded-md border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-900 placeholder:text-stone-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900 focus-visible:border-transparent disabled:cursor-not-allowed disabled:opacity-50",
+            error && "border-rose-600 focus-visible:ring-rose-600",
             className
           )}
           aria-invalid={error ? "true" : "false"}
           {...props}
         />
-        {error && <p className="text-xs text-rose-600 font-medium">{error}</p>}
+        {error && <p className="text-xs text-rose-700">{error}</p>}
       </div>
     );
   }

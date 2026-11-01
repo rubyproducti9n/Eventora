@@ -37,28 +37,33 @@ export function Modal({ isOpen, onClose, title, description, children, className
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
     >
       <div
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity"
+        className="fixed inset-0 bg-stone-900/40 backdrop-blur-xs"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
         className={cn(
-          "relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl border border-slate-200 transition-all",
+          "relative z-10 w-full max-w-lg rounded-md bg-white p-6 shadow-md border border-stone-200",
           className
         )}
       >
         <button
+          type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-md p-1.5 text-slate-400 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+          className="absolute right-4 top-4 rounded-sm p-1 text-stone-400 hover:text-stone-700 hover:bg-stone-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-900"
           aria-label="Close dialog"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
-        {title && <h2 className="text-lg font-semibold text-slate-900 pr-6">{title}</h2>}
-        {description && <p className="mt-1 text-sm text-slate-500 mb-4">{description}</p>}
+        {(title || description) && (
+          <div className="mb-4 pr-6">
+            {title && <h3 className="text-base font-semibold text-stone-900">{title}</h3>}
+            {description && <p className="mt-1 text-xs text-stone-500">{description}</p>}
+          </div>
+        )}
 
-        <div className="mt-4">{children}</div>
+        <div>{children}</div>
       </div>
     </div>
   );

@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sparkles, Calendar, PlusCircle, LayoutDashboard, Menu, X } from "lucide-react";
+import { Calendar, PlusCircle, LayoutDashboard, Menu, X } from "lucide-react";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui";
 
 const navigationItems = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "My Events", href: "/events", icon: Calendar },
+  { name: "All events", href: "/events", icon: Calendar },
 ];
 
 export function Header() {
@@ -17,20 +17,17 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full border-b border-stone-200/90 bg-stone-50/95 backdrop-blur-xs">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-indigo-600 to-indigo-500 text-white shadow-sm shadow-indigo-200">
-              <Sparkles className="h-5 w-5" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg font-bold tracking-tight text-slate-900">Eventora</span>
-              <span className="text-[10px] font-medium tracking-wide uppercase text-indigo-600 -mt-1">
-                AI Event Planner
-              </span>
-            </div>
+          <Link href="/" className="flex items-baseline gap-2 group">
+            <span className="text-lg font-semibold tracking-tight text-stone-900 group-hover:text-stone-700">
+              Eventora
+            </span>
+            <span className="text-xs text-stone-500 font-normal">
+              planner
+            </span>
           </Link>
 
           {/* Desktop Nav */}
@@ -43,13 +40,13 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    "flex items-center gap-2 rounded-md px-3 py-1.5 text-xs font-medium",
                     isActive
-                      ? "bg-indigo-50 text-indigo-700"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                      ? "bg-stone-200/80 text-stone-900"
+                      : "text-stone-600 hover:bg-stone-200/50 hover:text-stone-900"
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-3.5 w-3.5" />
                   {item.name}
                 </Link>
               );
@@ -60,27 +57,27 @@ export function Header() {
         {/* Action Button & Mobile Menu Trigger */}
         <div className="flex items-center gap-3">
           <Link href="/events/new">
-            <Button size="sm" className="hidden sm:inline-flex items-center gap-1.5 shadow-sm">
-              <PlusCircle className="h-4 w-4" />
-              Create Event
+            <Button size="sm" className="hidden sm:inline-flex items-center gap-1.5">
+              <PlusCircle className="h-3.5 w-3.5" />
+              New event
             </Button>
           </Link>
 
           <button
             type="button"
-            className="md:hidden inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+            className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-stone-600 hover:bg-stone-200/60 hover:text-stone-900"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-expanded={mobileMenuOpen}
-            aria-label="Toggle navigation menu"
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            <span className="sr-only">Toggle navigation menu</span>
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Nav Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1">
+        <div className="md:hidden border-b border-stone-200 bg-stone-50 px-4 py-3 space-y-2">
           {navigationItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -90,22 +87,22 @@ export function Header() {
                 href={item.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={cn(
-                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium transition-colors",
+                  "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium",
                   isActive
-                    ? "bg-indigo-50 text-indigo-700 font-semibold"
-                    : "text-slate-700 hover:bg-slate-100"
+                    ? "bg-stone-200 text-stone-900"
+                    : "text-stone-600 hover:bg-stone-200/50 hover:text-stone-900"
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="h-4 w-4" />
                 {item.name}
               </Link>
             );
           })}
-          <div className="pt-2">
-            <Link href="/events/new" onClick={() => setMobileMenuOpen(false)} className="block">
-              <Button className="w-full justify-center">
-                <PlusCircle className="h-4 w-4 mr-2" />
-                Create New Event
+          <div className="pt-2 border-t border-stone-200">
+            <Link href="/events/new" onClick={() => setMobileMenuOpen(false)}>
+              <Button size="sm" className="w-full justify-center gap-1.5">
+                <PlusCircle className="h-4 w-4" />
+                New event
               </Button>
             </Link>
           </div>
